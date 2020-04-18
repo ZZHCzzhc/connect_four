@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Connect Four</title>
+        <script type="text/javascript">
+            var GameBoard = [];
+            var ActivePlayer = 0;
+            const PlayerColor = [];
+            const PlayerColorText = [];
+            PlayerColor[0] = "gray";
+            PlayerColor[1] = "red";
+            PlayerColor[2] = "green";
+    
+			
+			function beginGame() {
+                ActivePlayer = 1;
+                for(var row = 0; row < 6; row++) {
+                    GameBoard[row] = [];
+
+                    for(var col = 0; col < 7; col++) {
+                        GameBoard[row][col] = 0;
+                    }
+                }
+            }
+			
+            function reStart() {
+                for(var row = 0; row < 6; row++) {
+                    for(var col = 0; col < 7; col++) {
+                        GameBoard[row][col] = 0;
+                    }
+                }
+                ActivePlayer = 1;
+                drawBoard();
+            }
+
+
+            //fill in color
+			function drawBoard() {
+                for(var row = 0; row < 6; row++) {
+                    for(var col = 0; col < 7; col++) {
+                        document.getElementById('circle_'+row+'_'+col).style.backgroundColor = PlayerColor[GameBoard[row][col]];
+                    }
+                }
+            
+                document.getElementById('game_info').innerHTML = "Current Player: Player " + ActivePlayer /*+  <span style="color:PlayerColor[ActivePlayer];font-weight:bold">PlayerColorText[ActivePlayer]</span>*/;
+
+            }
+			
+			function CheckWin(row, col) {
+                var connected = 0;
+                //row
+                for(var i = 0; i < 6; i++) {
+                    
+                    if(GameBoard[i][col] == ActivePlayer) {
+                        connected++;
+                    }
+                    else {
+                        connected = 0;
+                    }
+                    if(connected == 4) {
+                        return true;
+                    }
+                    // console.log("//ROW: row= "+i+"; col= "+col+"  connected= "+connected+"");
+                }
+                connected = 0;
+
+                //col
+                for(var i = 0; i < 7; i++) {
+  
+                    if(GameBoard[row][i] == ActivePlayer) {
+                        connected++;
+                    }
+                    else {
+                        connected = 0;
+                    }
+                    if(connected == 4) {
+                        return true;
+                    }
+                    // console.log("//COL: row= "+row+"; col= "+i+"  connected= "+connected+"");
+                }
+                connected = 0;
+
+                //upper-left to lower-right
+                var i = row;
+                var j = col;
+                while(row != 0 && j != 0) {
+                    i--;
+                    j--;
+                    // console.log("//upper-left to lower-right(TTPST): row= "+i+"; col= "+j+"  connected= "+connected+" gameboard[i][j]= "+GameBoard[i][j]+"");
+                }
+                while(i < 5 && j < 6){
+
+                    if(GameBoard[i][j] == ActivePlayer) {
+                        connected++;
+                    }
+                    else {
+                        connected = 0;
+                    }
+                    if(connected == 4) {
+                        return true;
+                    }
+                    i++;
+                    j++;
+                    // console.log("//upper-left to lower-right(try): row= "+i+"; col= "+j+"  connected= "+connected+" gameboard[i][j]= "+GameBoard[i][j]+"");
+                }
+                connected = 0;
+                i = row;
+                j = col;
+
+                //lower-left to upper-right  
+                while(i != 0 && j != 5) {
+                    i--;
+                    j++;
+                    // console.log("//lower-left to upper-right(TTPST): row= "+i+"; col= "+j+"  connected= "+connected+" gameboard[i][j]= "+GameBoard[i][j]+"");
+                }
+                while(i < 5 && j > 0) {
+
+                    if(GameBoard[i][j] == ActivePlayer) {
+                        connected++;
+                    }
+                    else {
+                        connected = 0;
+                    }
+                    if(connected == 4) {
+                        return true;
+                    }
+                    i++;
+                    j--;
+                    // console.log("//lower-left to upper-right(try): row= "+i+"; col= "+j+"  connected= "+connected+" gameboard[i][j]= "+GameBoard[i][j]+"");
+                }
+                return false;
+                
+            }
+			
+			function endGame(winningPlayer) {
+                drawBoard();
+                window.alert("Player"+ActivePlayer+" Win!");
+                reStart();
+			}
+
+            //set the empty slot of the col to the ActivePlayer
+			function drop(col) {
+                console.log("<td><button onclick='drop("+col+");'>Drop</button></td>");
+                for (row=5; row>=0; row--) { 
+						if (GameBoard[row][col] == 0) {
+							GameBoard[row][col] = ActivePlayer;//drop one 
+                            drawBoard(); 
+
+                            if(CheckWin(row, col) == true) {
+                                endGame(ActivePlayer);
+                            }
+
+                            if (ActivePlayer == 1) {//is done switch player
+								ActivePlayer = 2;
+							}
+                            else {
+								ActivePlayer = 1;
+							}
+							
+							drawBoard(); 
+                            return true;
+						}
+					}
+            }
+			
+
+		</script>
+		
+		<style>
+			.click_button {
+				height: 55px;
+				width: 55px;
+				border-radius: 24px;
+				background-color: rgb(255, 0, 0);
+				cursor: pointer;
+			}
+			
+			.circle {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+			}
+		</style>
+			
+    </head>
+    
+
+    <body onload="">
+		<!--<h1> is section heading -->
+        <h1>Connect Four</h1>
+        <!--<p> ispresenting a grapgh or text-->
+        <p>player who make 4 circles in a row first is winner</p>
+		
+        <div id="game_info">
+        </div>
+		
+        <table>
+					<script type="text/javascript">
+					for (let i = 0; i < 7; i++){
+						document.write("<td><button onclick='drop("+i+");'>Drop</button></td>");
+
+					}
+                    for (let i = 0; i < 6; i++){
+                        document.write("<tr>");
+                        for (let j = 0; j < 7; j++){
+                            document.write("<td class='circle' id='circle_"+i+"_"+j+"'></td>");
+                            console.log("<td class='circle' id='circle_"+i+"_"+j+"></td>");
+                        }
+                        document.write("</tr>");
+                    }
+					</script>
+				</table>
+
+        <script>
+			beginGame()
+            drawBoard();
+        </script>
+
+
+	</body>
+
+</html>
