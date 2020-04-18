@@ -3,6 +3,8 @@
 	<head>
 		<title>Connect Four</title>
         <script type="text/javascript">
+        //setup all variable needed
+            var count = 0;
             var GameBoard = [];
             var ActivePlayer = 0;
             const PlayerColor = [];
@@ -12,7 +14,7 @@
             PlayerColor[2] = "green";
     
 			
-			function beginGame() {
+			function beginGame() {//makeing boadr array
                 ActivePlayer = 1;
                 for(var row = 0; row < 6; row++) {
                     GameBoard[row] = [];
@@ -23,7 +25,7 @@
                 }
             }
 			
-            function reStart() {
+            function reStart() { // set everything to blank
                 for(var row = 0; row < 6; row++) {
                     for(var col = 0; col < 7; col++) {
                         GameBoard[row][col] = 0;
@@ -42,12 +44,13 @@
                     }
                 }
             
-                document.getElementById('game_info').innerHTML = "Current Player: Player " + ActivePlayer /*+  <span style="color:PlayerColor[ActivePlayer];font-weight:bold">PlayerColorText[ActivePlayer]</span>*/;
+                document.getElementById('game_info').innerHTML = "Current Player: Player " + ActivePlayer /*+  <span style="color:PlayerColor[ActivePlayer];font-weight:bold">PlayerColorText[ActivePlayer]</span>*/;//SHOW PLAYER COLOR FAILD(NEED GRILL'S HELP)
 
             }
 			
 			function CheckWin(row, col) {
                 var connected = 0;
+
                 //row
                 for(var i = 0; i < 6; i++) {
                     
@@ -83,13 +86,14 @@
                 //upper-left to lower-right
                 var i = row;
                 var j = col;
-                while(row != 0 && j != 0) {
+                                
+                while(i > 0 && j > 0) {
                     i--;
                     j--;
-                    // console.log("//upper-left to lower-right(TTPST): row= "+i+"; col= "+j+"  connected= "+connected+" gameboard[i][j]= "+GameBoard[i][j]+"");
                 }
-                while(i < 5 && j < 6){
 
+                while(i < 5 && j < 6){
+                    
                     if(GameBoard[i][j] == ActivePlayer) {
                         connected++;
                     }
@@ -101,7 +105,7 @@
                     }
                     i++;
                     j++;
-                    // console.log("//upper-left to lower-right(try): row= "+i+"; col= "+j+"  connected= "+connected+" gameboard[i][j]= "+GameBoard[i][j]+"");
+                    // console.log("//upper-left to lower-right(1): row= "+i+"; col= "+j+"  connected= "+connected+"");
                 }
                 connected = 0;
                 i = row;
@@ -132,11 +136,18 @@
                 
             }
 			
-			function endGame(winningPlayer) {
+			function endGame(winningPlayer) {//refrash board and popup message window 
                 drawBoard();
                 window.alert("Player"+ActivePlayer+" Win!");
                 reStart();
 			}
+
+            function DrawGame() {//refrash board and popup message window 
+
+                drawBoard();
+                window.alert("DRAW!");
+                reStart();
+            }
 
             //set the empty slot of the col to the ActivePlayer
 			function drop(col) {
@@ -149,7 +160,10 @@
                             if(CheckWin(row, col) == true) {
                                 endGame(ActivePlayer);
                             }
-
+                            count++;
+                            if(count == 42) {
+                                DrawGame();
+                            }
                             if (ActivePlayer == 1) {//is done switch player
 								ActivePlayer = 2;
 							}
@@ -165,7 +179,7 @@
 			
 
 		</script>
-		
+		<!--css cite from https://www.w3schools.com/ and student Liruyu gives help-->
 		<style>
 			.click_button {
 				height: 55px;
@@ -185,7 +199,7 @@
     </head>
     
 
-    <body onload="">
+    <body onload=""> <!--still can't understand how onload work-->
 		<!--<h1> is section heading -->
         <h1>Connect Four</h1>
         <!--<p> ispresenting a grapgh or text-->
@@ -196,11 +210,11 @@
 		
         <table>
 					<script type="text/javascript">
-					for (let i = 0; i < 7; i++){
+					for (let i = 0; i < 7; i++){//7 drop button
 						document.write("<td><button onclick='drop("+i+");'>Drop</button></td>");
 
 					}
-                    for (let i = 0; i < 6; i++){
+                    for (let i = 0; i < 6; i++){ // 2d array to draw the basic of board
                         document.write("<tr>");
                         for (let j = 0; j < 7; j++){
                             document.write("<td class='circle' id='circle_"+i+"_"+j+"'></td>");
@@ -212,8 +226,8 @@
 				</table>
 
         <script>
-			beginGame()
-            drawBoard();
+			beginGame();//refrash data
+            drawBoard();//fill color(player)
         </script>
 
 
