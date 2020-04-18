@@ -161,8 +161,10 @@
                                 endGame(ActivePlayer);
                             }
                             count++;
+                            console.log("log: "+count)
                             if(count == 42) {
                                 DrawGame();
+                                return true;
                             }
                             if (ActivePlayer == 1) {//is done switch player
 								ActivePlayer = 2;
